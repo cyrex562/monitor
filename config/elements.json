@@ -1,0 +1,132 @@
+{
+  "elements": [
+    {
+      "group": "nodes",
+      "data": {
+        "description": "",
+        "name": "node 3",
+        "id": "GQJB"
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "description": "",
+        "name": "node 4",
+        "id": "MA36"
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "description": "",
+        "name": "node 2",
+        "id": "XFBU"
+      }
+    },
+    {
+      "group": "nodes",
+      "data": {
+        "description": "",
+        "name": "node 1",
+        "id": "746A"
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "target_data": {
+          "description": "ntr",
+          "name": "src 2"
+        },
+        "source": "746A",
+        "target": "GQJB",
+        "id": "C6VQ",
+        "source_data": {
+          "description": "ntr",
+          "name": "src 1"
+        }
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "target_data": {
+          "description": "ntr",
+          "name": "tgt 1"
+        },
+        "source": "GQJB",
+        "target": "MA36",
+        "id": "9PDK",
+        "source_data": {
+          "description": "ntr",
+          "name": "src 1"
+        }
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "target_data": {
+          "description": "ntr",
+          "name": "tgt 1"
+        },
+        "source": "MA36",
+        "target": "XFBU",
+        "id": "WYE0",
+        "source_data": {
+          "description": "ntr",
+          "name": "src 1"
+        }
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "target_data": {
+          "description": "ntr",
+          "name": "tgt 1"
+        },
+        "source": "XFBU",
+        "target": "746A",
+        "id": "RUJ6",
+        "source_data": {
+          "description": "ntr",
+          "name": "src 1"
+        }
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "target_data": {
+          "description": "ntr",
+          "name": "tgt 1"
+        },
+        "source": "746A",
+        "target": "MA36",
+        "id": "K9F1",
+        "source_data": {
+          "description": "ntr",
+          "name": "src 1"
+        }
+      }
+    },
+    {
+      "group": "edges",
+      "data": {
+        "target_data": {
+          "description": "ntr",
+          "name": "tgt 1"
+        },
+        "source": "GQJB",
+        "target": "XFBU",
+        "id": "2DRW",
+        "source_data": {
+          "description": "ntr",
+          "name": "src 1"
+        }
+      }
+    }
+  ]
+}

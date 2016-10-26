@@ -1,0 +1,14 @@
+#cy {
+    /*width: 900px;*/
+    width: 98%;
+    height: 512px;
+    display: block;
+}
+
+#form-col {
+    resize: horizontal;
+}
+
+#graph-col {
+    resize: horizontal;
+}
