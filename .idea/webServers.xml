@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="bab3e9c2-6da4-4a50-821f-c5876e267bed" name="home_router" url="http://10.249.0.1:8001">
+        <fileTransfer host="10.249.0.1" port="22" rootFolder="/opt/monitor" accessType="SFTP" password="df99dfc9df80df9ddfeedfe0dfd9dfdf" username="box-admin">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" />
+          </advancedOptions>
+          <option name="port" value="22" />
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

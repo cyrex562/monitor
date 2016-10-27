@@ -1,5 +1,4 @@
 import argparse
-
 import graph_utils
 
 node_ids = {}
