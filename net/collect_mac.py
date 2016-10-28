@@ -1,11 +1,12 @@
 import argparse
+import csv
 import ctypes
+import datetime
 import os
-from _ctypes import POINTER
-
+import shutil
 import sys
-
 import struct
+from _ctypes import POINTER
 
 from net.ethernet import mac_to_str, EtherType
 from net.pcap import pcap_open_live, PcapPktHdr, pcap_next_ex, c_ubyte
@@ -25,7 +26,8 @@ class Context(object):
                  timeout=1000,
                  store_to_file=False,
                  store_to_redis=False,
-                 print_to_screen=False):
+                 print_to_screen=False,
+                 mode="overwrite"):
         self.store_to_file = store_to_file
         self.store_to_redis = store_to_redis
         self.print_to_screen = print_to_screen
@@ -35,6 +37,7 @@ class Context(object):
         self.snap_len = snap_len
         self.promiscuous = True
         self.timeout = timeout
+        self.mode = mode
 
 
 def parse_cmd_line():
@@ -67,8 +70,7 @@ def parse_cmd_line():
         "--redis_key",
         "-k",
         help="key to store mac address information in",
-        default="titan:mac_addresses"
-    )
+        default="titan:mac_addresses")
     parser.add_argument(
         "--dev_name",
         "-d",
@@ -78,20 +80,24 @@ def parse_cmd_line():
         "--snap_len",
         "-s",
         help="snap len",
-        default=0xffff
-    )
+        default=0xffff)
     parser.add_argument(
         "--timeout",
         "-t",
         help="timeout",
-        default=1000
-    )
+        default=1000)
+    parser.add_argument(
+        "--mode",
+        "-m",
+        help="overwrite,cycle,update",
+        default="overwrite")
+
     args = parser.parse_args()
     return Context(args.out_file, args.redis_key, args.dev_name, args.snap_len,
                    args.timeout,
                    args.store_to_file, args.store_to_redis,
                    args.print_to_screen,
-                   )
+                   args.mode)
 
 
 def print_mac_addresses(mac_addresses):
@@ -100,7 +106,7 @@ def print_mac_addresses(mac_addresses):
         print("{}, {}".format(mac_to_str(mac["mac"]), mac["refcount"]))
 
 
-def parse_pkt(pkt_len, pkt_str, mac_addresses):
+def parse_pkt(ctx, pkt_len, pkt_str, mac_addresses):
     # u_char dest mac[6]
     # u_char src_mac[6]
     # u_char 802_1q_tag[4]
@@ -147,11 +153,44 @@ def parse_pkt(pkt_len, pkt_str, mac_addresses):
 
     if src_mac_exists is False or dst_mac_exists is False:
         # TODO: print if enabled
-        print_mac_addresses(mac_addresses)
+        if ctx.print_to_screen is True:
+            print_mac_addresses(mac_addresses)
+    # TODO: save to file
+    if ctx.store_to_file is True:
+        if ctx.mode == "overwrite":
+            write_out_file(ctx, mac_addresses)
+        elif ctx.mode == "update":
+            with open(ctx.out_file, 'w') as fd:
+                csvr = csv.DictReader(fd)
+                for row in csvr:
+                    mac_updated = False
+                    for mac in mac_addresses:
+                        if mac["mac"] == row["mac"]:
+                            mac["refcount"] += 1
+                            mac_updated = True
+                            break
+                    if mac_updated is False:
+                        mac_addresses.append(row)
+            write_out_file(ctx, mac_addresses)
+        elif ctx.mode == "cycle":
+            d = datetime.datetime.utcnow()
+            s = d.strftime("%d%H%M%S%m%Y")
+            out_file_2 = os.path.join(ctx.out_file, ".{}.bak".format(s))
+            shutil.copy(ctx.out_file, out_file_2)
+            write_out_file(ctx, mac_addresses)
+
         # TODO: save to redis
-        # TODO: save to file
 
     return mac_addresses
+
+
+def write_out_file(ctx, mac_addresses):
+    with open(ctx.out_file, 'w') as of:
+        csvw = csv.DictWriter(of, fieldnames=["mac", "refcount"])
+        csvw.writeheader()
+        for mac in mac_addresses:
+            _mac = dict(mac=mac_to_str(mac["mac"]), refcount=mac["refcount"])
+            csvw.writerow(_mac)
 
 
 def run():
@@ -178,7 +217,7 @@ def run():
         if result == 1:
             pkt_len = pcap_hdr.contents.len
             pkt_str = ctypes.string_at(pcap_data, pkt_len)
-            mac_addresses = parse_pkt(pkt_len, pkt_str, mac_addresses)
+            mac_addresses = parse_pkt(ctx, pkt_len, pkt_str, mac_addresses)
         elif result == 0:
             print("timeout occurred")
         elif result == -1:
