@@ -1,0 +1,108 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{2f0b704e-9a1b-48f8-a643-48d973906fb5}</ProjectGuid>
+    <ProjectHome />
+    <StartupFile />
+    <SearchPath />
+    <WorkingDirectory>.</WorkingDirectory>
+    <OutputPath>.</OutputPath>
+    <ProjectTypeGuids>{888888a0-9f3d-457c-b088-3a5042f75d52}</ProjectTypeGuids>
+    <LaunchProvider>Standard Python launcher</LaunchProvider>
+    <InterpreterId>{2af0f10d-7135-4994-9156-5d01c9c11b7e}</InterpreterId>
+    <InterpreterVersion>3.5</InterpreterVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
+  <PropertyGroup>
+    <VisualStudioVersion Condition=" '$(VisualStudioVersion)' == '' ">10.0</VisualStudioVersion>
+    <PtvsTargetsFile>$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets</PtvsTargetsFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="config\elements.json" />
+    <Content Include="README.md" />
+    <Content Include="requirements.txt" />
+    <Content Include="controller\web\static\css\bootstrap-theme.css" />
+    <Content Include="controller\web\static\css\bootstrap-theme.min.css" />
+    <Content Include="controller\web\static\css\bootstrap.css" />
+    <Content Include="controller\web\static\css\bootstrap.min.css" />
+    <Content Include="controller\web\static\css\main.css" />
+    <Content Include="web\static\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="web\static\js\angular-animate.js" />
+    <Content Include="web\static\js\angular-cookies.js" />
+    <Content Include="web\static\js\angular-resource.js" />
+    <Content Include="web\static\js\angular.js" />
+    <Content Include="web\static\js\bootstrap.js" />
+    <Content Include="web\static\js\cytoscape.js" />
+    <Content Include="web\static\js\jquery-3.1.1.js" />
+    <Content Include="web\static\js\main.js" />
+    <Content Include="web\static\js\ui-bootstrap-tpls-2.2.0.js" />
+    <Content Include="web\static\main.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="controller\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="platform\net\arp.py" />
+    <Compile Include="platform\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="processor\mesh\collect_mac.py" />
+    <Compile Include="platform\net\ethernet.py" />
+    <Compile Include="platform\net\ipv4.py" />
+    <Compile Include="platform\net\multicast.py" />
+    <Compile Include="platform\net\pcap.py" />
+    <Compile Include="platform\net\udp.py" />
+    <Compile Include="platform\net\__init__.py" />
+    <Compile Include="processor\mesh\node\ethernet_parser.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="processor\mesh\node\file_output.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="processor\mesh\node\pcap_input.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="processor\mesh\node\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="processor\mesh\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="processor\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="setup\fabfile.py" />
+    <Compile Include="setup\__init__.py" />
+    <Compile Include="web\graph_schema_utils.py" />
+    <Compile Include="web\graph_utils.py" />
+    <Compile Include="web\web_service.py" />
+    <Compile Include="web\__init__.py" />
+    <Compile Include="__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="config" />
+    <Folder Include="platform\net\" />
+    <Folder Include="controller\" />
+    <Folder Include="data\" />
+    <Folder Include="platform\" />
+    <Folder Include="processor\" />
+    <Folder Include="processor\mesh\" />
+    <Folder Include="processor\mesh\node\" />
+    <Folder Include="setup" />
+    <Folder Include="controller\web\" />
+    <Folder Include="controller\web\static\" />
+    <Folder Include="controller\web\static\css\" />
+    <Folder Include="web\static\fonts" />
+    <Folder Include="web\static\js" />
+  </ItemGroup>
+  <ItemGroup>
+    <InterpreterReference Include="{2af0f10d-7135-4994-9156-5d01c9c11b7e}\3.5" />
+  </ItemGroup>
+  <Import Project="$(PtvsTargetsFile)" Condition="Exists($(PtvsTargetsFile))" />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" Condition="!Exists($(PtvsTargetsFile))" />
+</Project>

@@ -720,6 +720,7 @@ if sys.platform == 'win32':
     pcap_remoteact_list.argtypes = [c_char_p, c_char, c_int, c_char_p]
 
 
+
 # class WinPcapDevices(object):
 #     """
 #
@@ -873,4 +874,75 @@ if sys.platform == 'win32':
 #         """
 #         cls.capture_on(pattern, cls.packet_printer_callback)
 
+
+
+class PcapError(Exception):
+    pass
+        
+
+def get_pcap_dev_name(interface_name):
+    """
+    get the pcap device name that can be passed to pcap_open_live for a given interface name such as "eth0"
+    Throws PcapError when the call to pcap_findalldevs fails.
+    return: the pcap device name on success, or a blank string when not found.
+    
+    """
+    all_devices = ctypes.POINTER(PcapIf)()
+    err_buf = ctypes.create_string_buffer(PCAP_ERRBUF_SIZE)
+    result = pcap_findalldevs(ctypes.byref(all_devices), err_buf)
+    pcap_dev_name = ""
+    if result == 0: # success
+        for dev in all_devices:
+            if dev.description.find(interface_name) != -1:
+                pcap_dev_name = dev.name
+                break
+    elif result == -1: # failure
+        raise PcapError("failed to get list of pcap-capable devices, {}".format(err_buf.value))
+    pcap_freealldevs(all_devices)
+    return pcap_dev_name.encode('utf-8')
+
+
+def open_pcap(interface_name, snap_len=0xffff, promisc=1, timeout=1000):
+    dev_name = ""
+    err_buf = ctypes.create_string_buffer(pcap.PCAP_ERRBUF_SIZE)
+    try:
+        dev_name = pcap.get_pcap_dev_name(interface_name)
+    except pcap.PcapError as pe:
+        sys.stdout("error occurred getting pcap dev name for interface name, {}".format(pe))
+        sys.exit(-1)
+    if dev_name == "":
+        sys.stderr("device name not found for interface name \"{}\"".format(interface_name))
+        sys.exit(-1)
+        
+    h_pcap = pcap.pcap_open_live(dev_name, snap_len, promisc, timeout, err_buf)
+    #if h_pcap == None:
+    #    sys.stderr("error occurred opening device for packet capture, {}".format(err_buf.value))
+    #    sys.exit(-1)
+    if h_pcap == None:
+        raise PcapError("failed to open device for capturing, {}".format(err_buf.value))
+
+    return h_pcap
+
+
+def get_next_pkt(h_pcap):
+    pcap_hdr = POINTER(PcapPktHdr)()
+    pcap_data = POINTER(c_ubyte)()
+    err_buf = ctypes.create_string_buffer(PCAP_ERRBUF_SIZE)
+    pkt_ts = -1
+    pkt_str = ""
+    pkt_len = -1
+    if result == 1:
+        pkt_len = pcap_hdr.contents.len
+        raw_ts = pcap_hdr.ts
+        secs = int(raw_ts.tv_sec.value)
+        usecs = int(raw_ts.tv_usec.value)
+        pkt_ts = usecs + secs * 1000000
+        result = pcap_next_ex(h_pcap, pcap_hdr, pcap_data)
+    elif result == 0:
+        sys.stdout("timeout occurred")
+    elif result == -1:
+        raise PcapError("failed to get packet, {}".format(err_buf))
+    elif result == -2:
+        sys.stdout("EOF")
+    return pkt_ts, pkt_len, pkt_str
 # END OF FILE #
