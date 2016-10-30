@@ -1,3 +1,4 @@
-jsonpickle
-bottle
-pyyaml
+# libzmq
+pyzmq
+# memcached
+# python-memcached

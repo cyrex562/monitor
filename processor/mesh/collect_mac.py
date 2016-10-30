@@ -6,10 +6,14 @@ import os
 import shutil
 import sys
 import struct
+import multiprocessing
 from _ctypes import POINTER
 
 from net.ethernet import mac_to_str, EtherType
 from net.pcap import pcap_open_live, PcapPktHdr, pcap_next_ex, c_ubyte
+
+import monitor.processor.mesh.node as nodes
+import nodes.pcap_input as pcap_input
 
 PCAP_ERR_BUF_SZ = 4096
 
@@ -196,36 +200,39 @@ def write_out_file(ctx, mac_addresses):
 def run():
     ctx = parse_cmd_line()
     # h_pcap = None
-    dev_name = ctx.dev_name.encode('utf-8')
-    snap_len = ctx.snap_len
-    promisc = ctx.promiscuous
-    timeout = ctx.timeout
-    err_buf = ctypes.create_string_buffer(PCAP_ERR_BUF_SZ)
+    #dev_name = ctx.dev_name.encode('utf-8')
+    #snap_len = ctx.snap_len
+    #promisc = ctx.promiscuous
+    #timeout = ctx.timeout
+    #err_buf = ctypes.create_string_buffer(PCAP_ERR_BUF_SZ)
 
-    h_pcap = pcap_open_live(dev_name, snap_len, promisc, timeout, err_buf)
-    pcap_hdr = POINTER(PcapPktHdr)()
-    pcap_data = POINTER(c_ubyte)()
+    # nodes:
+    #   pcap input
+    #   ethernet parser
+    #   output for mac addresses
+    #   output for ethernet flows
+    # datastructures
+    #   packet table -- memached entries
+    #   mac address table -- redis
+    #   ethernet flow table -- redis
+    # datastores
+    #   mac 
+    # pcap input gets packet from device
+    # pcap iput copies packet to packet table
+    # pcap input passes packet table packet ref (index of packet in table) to parser
+    # parser gets packet ref from pcap input
+    # parser parses ethernet headers: mac addresses and ethernet flows
+    # parser
 
-    # FIXME: this loop should have an upper bound
-    mac_addresses = []
-    while True:
-        result = pcap_next_ex(h_pcap,
-                              pcap_hdr,
-                              pcap_data)
-        pkt_len = -1
-        pkt_str = b""
-        if result == 1:
-            pkt_len = pcap_hdr.contents.len
-            pkt_str = ctypes.string_at(pcap_data, pkt_len)
-            mac_addresses = parse_pkt(ctx, pkt_len, pkt_str, mac_addresses)
-        elif result == 0:
-            print("timeout occurred")
-        elif result == -1:
-            print("error occurred getting packet: {}".format(err_buf))
-            sys.exit()
-        elif result == -2:
-            print("EOF")
-            break
+    int_name = "Ethernet"
+    
+    pcap_input_proc = multiprocessing.process(target=pcap_input.run, 
+                                              args=(int_name))
+
+    # parsing process
+
+    
+    
 
         #print("pkt str: \"{}\", len: {}".format(pkt_str, pkt_len))
     print_mac_addresses(mac_addresses)

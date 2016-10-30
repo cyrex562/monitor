@@ -32,6 +32,7 @@ def parse_cmd_line():
 
 def parse_output_url(output_url):
     # TODO: implement output url parsing function
+    # memcached://127.0.0.1:11211
     pass    
 
 def write_to_output(output):
@@ -46,7 +47,7 @@ def on_packet_captured(pkt_ts, pk_str, pkt_len, output):
 
 
 
-def run(interface_name, snap_len=0xffff, timeout=1000, output_url="stdout"):
+def run(interface_name, output_url, snap_len=0xffff, timeout=1000):
     """
 
     """

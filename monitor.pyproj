@@ -22,6 +22,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Content Include="config\elements.json" />
+    <Content Include="platform\win\memcached.exe" />
+    <Content Include="platform\win\pthreadGC2.dll" />
     <Content Include="README.md" />
     <Content Include="requirements.txt" />
     <Content Include="controller\web\static\css\bootstrap-theme.css" />
@@ -56,6 +58,9 @@
     <Compile Include="platform\net\pcap.py" />
     <Compile Include="platform\net\udp.py" />
     <Compile Include="platform\net\__init__.py" />
+    <Compile Include="processor\mesh\pkt_tbl.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="processor\mesh\node\ethernet_parser.py">
       <SubType>Code</SubType>
     </Compile>
@@ -90,6 +95,7 @@
     <Folder Include="controller\" />
     <Folder Include="data\" />
     <Folder Include="platform\" />
+    <Folder Include="platform\win\" />
     <Folder Include="processor\" />
     <Folder Include="processor\mesh\" />
     <Folder Include="processor\mesh\node\" />
