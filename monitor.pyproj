@@ -24,6 +24,8 @@
     <Content Include="config\elements.json" />
     <Content Include="platform\win\memcached.exe" />
     <Content Include="platform\win\pthreadGC2.dll" />
+    <Content Include="platform\win\redis-cli.exe" />
+    <Content Include="platform\win\redis-server.exe" />
     <Content Include="README.md" />
     <Content Include="requirements.txt" />
     <Content Include="controller\web\static\css\bootstrap-theme.css" />
@@ -45,6 +47,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="controller\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="platform\datastore\redis_datastore.py" />
+    <Compile Include="platform\datastore\vedis_datastore.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="platform\net\arp.py" />
@@ -95,6 +101,7 @@
     <Folder Include="controller\" />
     <Folder Include="data\" />
     <Folder Include="platform\" />
+    <Folder Include="platform\datastore\" />
     <Folder Include="platform\win\" />
     <Folder Include="processor\" />
     <Folder Include="processor\mesh\" />
@@ -103,6 +110,8 @@
     <Folder Include="controller\web\" />
     <Folder Include="controller\web\static\" />
     <Folder Include="controller\web\static\css\" />
+    <Folder Include="web\" />
+    <Folder Include="web\static\" />
     <Folder Include="web\static\fonts" />
     <Folder Include="web\static\js" />
   </ItemGroup>
